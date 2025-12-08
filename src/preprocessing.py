@@ -162,7 +162,7 @@ def substract_devices_from_total(total, devices, filter_negatives=True):
         downsampled_frame["base"][downsampled_frame["base"] < 0] = np.nan
 
     save_intermediate_csv(downsampled_frame, "output")
-    return downsampled_frame["base"]
+    return downsampled_frame
 
 
 def plot_output(df):
@@ -176,8 +176,7 @@ def plot_output(df):
     fig.show()
 
 
-if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
+def fetch_and_preprocess():
     os.makedirs(cf.saving_dir, exist_ok=True)
 
     data_root = Dataset.get(
@@ -191,5 +190,10 @@ if __name__ == "__main__":
     baseload_output = substract_devices_from_total(
         total_processed, devices_processed, filter_negatives=True
     )
+    return baseload_output
 
-    plot_output(baseload_output)
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
+    baseload_output = fetch_and_preprocess()
+    plot_output(baseload_output["base"])

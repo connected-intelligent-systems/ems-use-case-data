@@ -34,7 +34,11 @@ def closest_substitute(df, day):  # mind the side effect
     return substitute
 
 
-def impute_seasonally(data: pd.DataFrame, target_year: int):
+def impute_seasonally(
+    data: pd.DataFrame,
+    target_year: int,
+    freq: str | pd.Timedelta | None = None,
+):
     """
     TODO make sure the UTC conversion is done correctly,
       i.e., the series is not actually cut at 10/11 pm
@@ -43,6 +47,7 @@ def impute_seasonally(data: pd.DataFrame, target_year: int):
     idx = data.index
     if not isinstance(idx, pd.DatetimeIndex):
         raise ValueError("data must be a pandas DataFrame with a DatetimeIndex.")
+    freq = freq or data.index.inferred_freq
 
     # finding out what to substitute
     substitution_mapping = data.groupby(idx.date).apply(lambda g: g.isna().any())
@@ -121,6 +126,6 @@ if __name__ == "__main__":
 
     year = 2022
 
-    imputed_data = impute_seasonally(csv_contents, year)
+    imputed_data = impute_seasonally(csv_contents, year, freq)
 
     log.info(f"imputed_data:\n{imputed_data}")
