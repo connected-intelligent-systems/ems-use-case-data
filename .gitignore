@@ -1,6 +1,6 @@
 # Specific to repo
 data/
-src/intermediate_saves/
+intermediate_saves/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
